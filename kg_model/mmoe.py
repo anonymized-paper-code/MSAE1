@@ -16,28 +16,6 @@ from .core import DNN, PredictionLayer
 from ple_simplehgn import SimpleHGN_final, SimpleHGN_MTL_Layer
 
 class MMOE(nn.Module):
-    """Instantiates the Multi-gate Mixture-of-Experts architecture.
-
-    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.
-    :param num_experts: integer, number of experts.
-    :param expert_dnn_hidden_units: list, list of positive integer or empty list, the layer number and units in each layer of expert DNN.
-    :param gate_dnn_hidden_units: list, list of positive integer or empty list, the layer number and units in each layer of gate DNN.
-    :param tower_dnn_hidden_units: list, list of positive integer or empty list, the layer number and units in each layer of task-specific DNN.
-    :param l2_reg_linear: float, L2 regularizer strength applied to linear part.
-    :param l2_reg_embedding: float, L2 regularizer strength applied to embedding vector.
-    :param l2_reg_dnn: float, L2 regularizer strength applied to DNN.
-    :param init_std: float, to use as the initialize std of embedding vector.
-    :param seed: integer, to use as random seed.
-    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.
-    :param dnn_activation: Activation function to use in DNN.
-    :param dnn_use_bn: bool, Whether use BatchNormalization before activation or not in DNN.
-    :param task_types: list of str, indicating the loss of each tasks, ``"binary"`` for  binary logloss, ``"regression"`` for regression loss. e.g. ['binary', 'regression'].
-    :param task_names: list of str, indicating the predict target of each tasks.
-    :param device: str, ``"cpu"`` or ``"cuda:0"``.
-    :param gpus: list of int or torch.device for multiple gpus. If None, run on `device`. `gpus[0]` should be the same gpu with `device`.
-
-    :return: A PyTorch model instance.
-    """
 
     def __init__(self, dnn_feature_columns, num_experts=3, expert_dnn_hidden_units=(256, 128),
                  gate_dnn_hidden_units=(64,), tower_dnn_hidden_units=(64,), l2_reg_linear=0.00001,
