@@ -1,0 +1,82 @@
+# ple_simplehgn
+model: MMOE
+## data setting
+# dataset
+dataset: Aminer
+# task 
+Target_Node_Type: ['author', 'paper'] 
+task_name: ['author', 'paper']  
+task_to_node: {'author':'author', 'paper':'paper'}
+task_type: {'author':'multi-label', 'paper':'single-label'} 
+task_graph_type: ['nc', 'nc']  
+class_num: [4, 4]
+
+
+# Target_Node_Type: ['author', 'author', 'author', 'author']
+# task_name:  ['author1', 'author2', 'author3', 'author4']
+# task_type: {'author1':'single-label', 'author2':'single-label', 'author3':'single-label', 'author4':'single-label', 'paper':'single-label'}
+# task_graph_type: ['nc', 'nc', 'nc', 'nc']  
+# class_num: 2
+
+## training setting 
+rerun_num: 10
+# epoch
+train_epoch: 2000
+iter_num: 1
+early_stop: 40
+# optimizer
+learning_rate: 0.0005
+weight_decay: 0 
+# metric
+save_metric: micro
+# recorder
+recorder_type: ['gate', 'att']
+
+## evaluation setting
+eval_inter_ep: 10
+
+## SimpleHGN paramter
+# model
+layer_num: 3
+node_feature_hid_len: 64  # len of embedding feature
+GAT_hid_len: 64 
+edge_feats_len: 64
+nhead: 1 #8
+edge_residual_alpha: 0  # default: 0.05
+dropout: 0
+
+
+## PLE paramter
+# expert_num:
+shared_expert_num: 2
+specific_expert_num: 2
+# try method
+# share embedding network
+share_emb_net: True
+# gate_type
+gate_type: mlp # 'mlp' 'para' 'const' 'transformer'
+# 图的处理方式
+split_method: layer  # 'full' 'layer'
+# share expert进行单独的输出, 如果为True，则share experts也输出预测结果
+share_output: False
+# 使用自己设计的graph gate
+graph_gate: False
+## PLE model structure
+num_levels: 3
+
+mmoe: True
+
+
+## Grad modification方法
+# 尝试uncertainty方法
+try_uncertainty: False
+try_uncertainty_intial_weight: [.5, .5,.5,.5]
+# PCGrad
+try_pcgrad: False
+
+
+# 跳过一些层不进行share
+jump_level: []
+
+# 每个node使用一个gate network
+dif_gate: False

@@ -1,0 +1,61 @@
+# ple_simplehgn
+model: Our
+## data setting
+# dataset
+dataset: DBLP
+# task 
+Target_Node_Type: ['author', 'paper'] 
+task_name: ['author', 'paper']  
+task_to_node: {'author':'author', 'paper':'paper'}
+task_type: {'author':'single-label', 'paper':'single-label'} 
+task_graph_type: ['nc', 'nc']  
+class_num: [4, 20]
+
+
+## training setting 
+rerun_num: 100
+# epoch
+train_epoch: 2000
+iter_num: 1
+early_stop: 40
+# optimizer
+learning_rate: 0.0005
+weight_decay: 0 
+# metric
+save_metric: loss
+# recorder
+recorder_type: ['gate', 'att']
+
+# different weight for different tasks
+loss_weight_decay: False
+
+## evaluation setting
+eval_inter_ep: 10
+
+## SimpleHGN paramter
+# model
+layer_num: 3
+node_feature_hid_len: 64  # len of embedding feature
+GAT_hid_len: 64 
+edge_feats_len: 64
+edge_residual_alpha: 0  # default: 0.05
+dropout: 0.5
+
+
+## PLE paramter
+# expert_num:
+shared_expert_num: 1
+specific_expert_num: 1
+## PLE model structure
+num_levels: 3
+
+
+
+## Our model parameter ##
+#outer_disen_num is equal to edge types
+outer_disen_feat_len: 64 
+
+# Progressive Disentanglement Layer
+disen_layer_num: 1 # default = 1
+
+

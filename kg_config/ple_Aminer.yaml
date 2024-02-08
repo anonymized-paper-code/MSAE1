@@ -1,0 +1,56 @@
+# ple_simplehgn
+model: PLE_SimpleHGN
+## data setting
+# dataset
+dataset: Aminer
+# task 
+Target_Node_Type: ['author', 'paper'] 
+task_name: ['author', 'paper']  
+task_to_node: {'author':'author', 'paper':'paper'}
+task_type: {'author':'multi-label', 'paper':'single-label'} 
+task_graph_type: ['nc', 'nc']  
+class_num: [4, 4]
+
+
+# Target_Node_Type: ['author', 'author', 'author', 'author']
+# task_name:  ['author1', 'author2', 'author3', 'author4']
+# task_type: {'author1':'single-label', 'author2':'single-label', 'author3':'single-label', 'author4':'single-label', 'paper':'single-label'}
+# task_graph_type: ['nc', 'nc', 'nc', 'nc']  
+# class_num: 2
+
+## training setting 
+rerun_num: 50
+# epoch
+train_epoch: 2000
+iter_num: 1
+early_stop: 40
+# optimizer
+learning_rate: 0.0005
+weight_decay: 0 
+# metric
+save_metric: micro
+# recorder
+recorder_type: ['gate', 'att']
+
+## evaluation setting
+eval_inter_ep: 10
+
+## SimpleHGN paramter
+# model
+layer_num: 3
+node_feature_hid_len: 64  # len of embedding feature
+GAT_hid_len: 64 
+edge_feats_len: 64
+edge_residual_alpha: 0  # default: 0.05
+dropout: 0.5
+
+
+## PLE paramter
+# expert_num:
+shared_expert_num: 3
+specific_expert_num: 3
+## PLE model structure
+num_levels: 3
+
+mmoe: False
+
