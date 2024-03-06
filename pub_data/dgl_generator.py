@@ -80,39 +80,35 @@ class DBLP:
         del feature['venue']
         
         # load label mask
-        if os.path.exists(split_data_path):
-            split_data = np.load(split_data_path, allow_pickle=True)
-            split_data = split_data.tolist()
-            author_mask, paper_mask = split_data[0], split_data[1]
-        else:
-            # paper mask
-            train_ratio = 0.6
-            val_ratio = 0.2
-            idx = np.arange(0, paper_label_num)
-            np.random.shuffle(idx)
-            train_idx, val_idx, test_idx = np.array_split(idx, [int(train_ratio*paper_label_num), int((val_ratio+train_ratio)*paper_label_num)])
-            mask = torch.zeros(paper_label_num, dtype=torch.bool)
-            p_train_mask, p_val_mask, p_test_mask = copy.deepcopy(mask), copy.deepcopy(mask), copy.deepcopy(mask)
-            p_train_mask[train_idx] = True
-            p_val_mask[val_idx] = True
-            p_test_mask[test_idx] = True
-                
-             
-            # author mask
-            a_train_mask = data_loader.labels_train['mask'][node_shift['author']:node_shift['author']+num_nodes['author']]
-            a_test_mask = data_loader.labels_test['mask'][node_shift['author']:node_shift['author']+num_nodes['author']]
-            val_ratio = 0.2
-            train_idx = np.nonzero(a_train_mask)[0] #
-            np.random.shuffle(train_idx)
-            split = int(train_idx.shape[0]*val_ratio)
-            a_train_mask_select = copy.deepcopy(a_train_mask)
-            a_train_mask_select[train_idx[:split]] = False
-            a_val_mask = copy.deepcopy(a_train_mask)
-            a_val_mask[train_idx[split:]] = False
 
-            author_mask = [a_train_mask_select, a_val_mask, a_test_mask]
-            paper_mask = [p_train_mask, p_val_mask, p_test_mask]
-            np.save(split_data_path, [author_mask, paper_mask], allow_pickle=True)
+        # paper mask
+        train_ratio = 0.6
+        val_ratio = 0.2
+        idx = np.arange(0, paper_label_num)
+        np.random.shuffle(idx)
+        train_idx, val_idx, test_idx = np.array_split(idx, [int(train_ratio*paper_label_num), int((val_ratio+train_ratio)*paper_label_num)])
+        mask = torch.zeros(paper_label_num, dtype=torch.bool)
+        p_train_mask, p_val_mask, p_test_mask = copy.deepcopy(mask), copy.deepcopy(mask), copy.deepcopy(mask)
+        p_train_mask[train_idx] = True
+        p_val_mask[val_idx] = True
+        p_test_mask[test_idx] = True
+            
+         
+        # author mask
+        a_train_mask = data_loader.labels_train['mask'][node_shift['author']:node_shift['author']+num_nodes['author']]
+        a_test_mask = data_loader.labels_test['mask'][node_shift['author']:node_shift['author']+num_nodes['author']]
+        val_ratio = 0.2
+        train_idx = np.nonzero(a_train_mask)[0] #
+        np.random.shuffle(train_idx)
+        split = int(train_idx.shape[0]*val_ratio)
+        a_train_mask_select = copy.deepcopy(a_train_mask)
+        a_train_mask_select[train_idx[:split]] = False
+        a_val_mask = copy.deepcopy(a_train_mask)
+        a_val_mask[train_idx[split:]] = False
+
+        author_mask = [a_train_mask_select, a_val_mask, a_test_mask]
+        paper_mask = [p_train_mask, p_val_mask, p_test_mask]
+        np.save(split_data_path, [author_mask, paper_mask], allow_pickle=True)
 
         author_mask  = [torch.BoolTensor(x) for x in author_mask]
         paper_mask  = [torch.BoolTensor(x) for x in paper_mask]

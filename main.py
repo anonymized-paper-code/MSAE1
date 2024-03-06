@@ -67,6 +67,15 @@ from sklearn.metrics import auc
 import matplotlib.pyplot as plt
 
 
+from kg_lib.args import load_parameter
+import argparse
+
+
+from kg_lib.utils import mkdir
+import logging
+from kg_lib.logging_util import init_logger
+
+from pub_data.dgl_generator import load_dgl_data
 # get_ipython().run_line_magic('load_ext', 'autoreload')
 # get_ipython().run_line_magic('autoreload', '2')
 
@@ -102,8 +111,7 @@ setup_seed(seed)
 # In[6]:
 
 
-from kg_lib.args import load_parameter
-import argparse
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str)
@@ -112,8 +120,7 @@ config_name = args.config
 
 
 config = load_parameter(f'kg_config/{config_name}.yaml')
-print(config)
-config['seed'] = seed
+
 
 
 loss_weight_decay = False
@@ -127,14 +134,6 @@ intial_value = 0.99
 
 # In[7]:
 
-print('Loading data......')
-from pub_data.dgl_generator import load_dgl_data
-dataloader = load_dgl_data(config)
-config['edge_dict'] = dataloader.edge_dict
-config['node_dict'] = dataloader.node_dict
-config['node_type_to_feature_len_dict'] = dataloader.node_type_to_feature_len_dict
-config['edge_type_each_node'] = dataloader.edge_type_each_node
-
 
 # In[8]:
 
@@ -142,9 +141,6 @@ config['edge_type_each_node'] = dataloader.edge_type_each_node
 # In[9]:
 
 
-from kg_lib.utils import mkdir
-import logging
-from kg_lib.logging_util import init_logger
 
 localtime = time.strftime("%m-%d-%H:%M:%S", time.localtime())
 
@@ -418,6 +414,13 @@ rerun_num = config['rerun_num']
 multi_train = True if rerun_num>1 else False
 metric_list_dict_best = []
 for tt in range(rerun_num):
+    print('Loading data......')
+    dataloader = load_dgl_data(config)
+    config['edge_dict'] = dataloader.edge_dict
+    config['node_dict'] = dataloader.node_dict
+    config['node_type_to_feature_len_dict'] = dataloader.node_type_to_feature_len_dict
+    config['edge_type_each_node'] = dataloader.edge_type_each_node
+
     print_result_best, metric_list_dict_single_ep, metric_list_dict = train(multi_train, tt)
     logging.info("\n\n\n\n-----------------------------------------------------------------\n\n\n\n")
     logging.info("\n----------------------------Result-------------------------------------")
